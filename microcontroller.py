@@ -42,7 +42,7 @@ class ImageDisplay:
         pygame.mouse.set_visible(False)
         pygame.display.update()
 
-    def displayImage(self, filename):
+    def displayImage(self, filename, sleep_time):
         img = pygame.image.load(filename)
 
         img_height = img.get_height()
@@ -81,6 +81,8 @@ class ImageDisplay:
         self.screen.fill([0, 0, 0])
         self.screen.blit(img, [display_x, display_y])
         pygame.display.update()
+        sleep(sleep_time)
+        pygame.display.quit()
 
 
 # MICROCONTROLLER FUNCTIONS
@@ -107,8 +109,8 @@ def get_image_from_base_station():
 def display_image_on_screen():
     player = ImageDisplay()
     print USER_IMAGE_PATH
-    player.displayImage(USER_IMAGE_PATH)
-    sleep(IMAGE_DISPLAY_TIME)
+    player.displayImage(USER_IMAGE_PATH, IMAGE_DISPLAY_TIME)
+    # sleep(IMAGE_DISPLAY_TIME)
     return
 
 def take_picture(send_to_base_station):
