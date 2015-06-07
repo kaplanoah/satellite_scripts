@@ -118,16 +118,22 @@ class Image:
 
 # EXECUTE
 
-print 'RUNNING get_image_from_web_app()'
-image = get_image_from_web_app()
+def full_cycle():
 
-if image and USE_HARDWARE:
+    print 'RUNNING get_image_from_web_app()'
+    image = get_image_from_web_app()
 
-    print 'RUNNING send_image_to_satellite()'
-    send_image_to_satellite(image)
+    if image and USE_HARDWARE:
 
-    print 'RUNNING get_picture_from_satellite()'
-    get_picture_from_satellite(image)
+        print 'RUNNING send_image_to_satellite()'
+        send_image_to_satellite(image)
 
-    print 'RUNNING send_picture_to_app()'
-    send_picture_to_app(image)
+        print 'RUNNING get_picture_from_satellite()'
+        get_picture_from_satellite(image)
+
+        print 'RUNNING send_picture_to_app()'
+        send_picture_to_app(image)
+
+while True:
+    full_cycle()
+    time.sleep(5)

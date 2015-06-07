@@ -149,11 +149,17 @@ def send_picture_to_base_station():
 
 send_to_base_station = True
 
-print 'RUNNING get_image_from_base_station()'
-get_image_from_base_station()
+def full_cycle():
 
-print 'RUNNING display_image_on_screen()'
-display_image_on_screen()
+    print 'RUNNING get_image_from_base_station()'
+    get_image_from_base_station()
 
-print 'RUNNING take_picture()'
-take_picture(send_to_base_station)
+    print 'RUNNING display_image_on_screen()'
+    display_image_on_screen()
+
+    print 'RUNNING take_picture()'
+    take_picture(send_to_base_station)
+
+while True:
+    full_cycle()
+    sleep(5)
