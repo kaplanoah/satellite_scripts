@@ -3,6 +3,8 @@ import urllib2
 import json
 import time
 import serial
+import requests
+import time
 
 
 # CONFIGURE CONSTANTS
@@ -13,20 +15,23 @@ USE_HARDWARE = True
 IMAGE_TYPE           = '.jpg'
 USER_IMAGE_PATH      = 'user_images/'
 SATELLITE_IMAGE_PATH = 'satellite_images/'
-DEV_API  = 'http://localhost:3000/api/v1/selfies/recent'
-PROD_API = 'http://www.humanitiesatellite.com/api/v1/selfies/recent'
+GET_IMAGE_API_DEV    = 'http://localhost:3000/api/v1/selfies/recent'
+GET_IMAGE_API_PROD   = 'http://www.humanitiesatellite.com/api/v1/selfies/recent'
+SEND_IMAGE_API_DEV   = 'http://localhost:3000/selfies.json'
+SEND_IMAGE_API_PROD  = 'http://www.humanitiesatellite.com/selfies.json'
 
 if USE_HARDWARE:
     SER = serial.Serial(port='/dev/tty.usbserial', baudrate=115200, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+
 
 # BASE STATION FUNCTIONS
 #   - get image from web app
 #   - send image to satellite
 
 def get_image_from_web_app():
-    api_endpoint = DEV_API if USE_DEV else PROD_API
+    api_url = GET_IMAGE_API_DEV if USE_DEV else GET_IMAGE_API_PROD
 
-    request     = urllib2.Request(api_endpoint)
+    request     = urllib2.Request(api_url)
     response    = urllib2.urlopen(request).read()
     selfie      = json.loads(response)
     selfie_url  = selfie['picture']['feed']['url']
@@ -79,7 +84,13 @@ def get_picture_from_satellite(image):
     return
 
 def send_picture_to_app(image):
-    pass
+    api_url = SEND_IMAGE_API_DEV if USE_DEV else SEND_IMAGE_API_PROD
+    files = {'file': open(SATELLITE_IMAGE_PATH + image.space_image_file_name, 'rb')}
+
+    r = requests.post(api_url, {'name': image.space_image_file_name}, files=files)
+
+    print r.text
+
 
 # HELPER FUNCTIONS
 
@@ -100,6 +111,8 @@ class Image:
         self.space_image_file_name = constuct_file_name(self, True)
 
 
+# EXECUTE
+
 print 'RUNNING get_image_from_web_app()'
 image = get_image_from_web_app()
 
@@ -113,4 +126,3 @@ if USE_HARDWARE:
 
     print 'RUNNING send_picture_to_app()'
     send_picture_to_app(image)
-

@@ -11,9 +11,10 @@ IMAGE_DIRECTORY      = 'Desktop/images/'
 IMAGE_TYPE           = '.jpg'
 USER_IMAGE_PATH      = IMAGE_DIRECTORY + 'user_image'      + IMAGE_TYPE
 SATELLITE_IMAGE_PATH = IMAGE_DIRECTORY + 'satellite_image' + IMAGE_TYPE
-IMAGE_DISPLAY_TIME   = 4   # seconds
+IMAGE_DISPLAY_TIME   = 8   # seconds
 IMAGE_QUALITY        = 0.5 # 0-1 where 1 is best resultion
 SER                  = serial.Serial(port='/dev/ttyAMA0', baudrate=115200, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+
 
 # IMAGE DISPLAY CLASS
 #   - initialize pygame
@@ -42,7 +43,7 @@ class ImageDisplay:
         pygame.mouse.set_visible(False)
         pygame.display.update()
 
-    def displayImage(self, filename, sleep_time):
+    def displayImage(self, filename):
         img = pygame.image.load(filename)
 
         img_height = img.get_height()
@@ -81,8 +82,7 @@ class ImageDisplay:
         self.screen.fill([0, 0, 0])
         self.screen.blit(img, [display_x, display_y])
         pygame.display.update()
-        sleep(sleep_time)
-        pygame.display.quit()
+        sleep(IMAGE_DISPLAY_TIME)
 
 
 # MICROCONTROLLER FUNCTIONS
@@ -109,8 +109,7 @@ def get_image_from_base_station():
 def display_image_on_screen():
     player = ImageDisplay()
     print USER_IMAGE_PATH
-    player.displayImage(USER_IMAGE_PATH, IMAGE_DISPLAY_TIME)
-    # sleep(IMAGE_DISPLAY_TIME)
+    player.displayImage(USER_IMAGE_PATH)
     return
 
 def take_picture(send_to_base_station):
@@ -144,6 +143,8 @@ def send_picture_to_base_station():
     SER.write('\n<END_IMAGE>\n')
     SER.flush()
 
+
+# EXECUTE
 
 send_to_base_station = True
 
