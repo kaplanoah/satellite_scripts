@@ -31,11 +31,16 @@ if USE_HARDWARE:
 def get_image_from_web_app():
     api_url = GET_IMAGE_API_DEV if USE_DEV else GET_IMAGE_API_PROD
 
-    request     = urllib2.Request(api_url)
-    response    = urllib2.urlopen(request).read()
-    selfie      = json.loads(response)
-    selfie_url  = selfie['picture']['feed']['url']
+    request      = urllib2.Request(api_url)
+    response_str = urllib2.urlopen(request).read()
+    response     = json.loads(response_str)
 
+    if response['status'] == 204:
+        return None
+
+    selfie = response['selfie']
+
+    selfie_url  = selfie['picture']['feed']['url']
     user_id     = selfie['user_id']
     selfie_id   = selfie['id']
 
@@ -116,7 +121,7 @@ class Image:
 print 'RUNNING get_image_from_web_app()'
 image = get_image_from_web_app()
 
-if USE_HARDWARE:
+if image and USE_HARDWARE:
 
     print 'RUNNING send_image_to_satellite()'
     send_image_to_satellite(image)
