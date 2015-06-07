@@ -82,7 +82,7 @@ class ImageDisplay:
         self.screen.fill([0, 0, 0])
         self.screen.blit(img, [display_x, display_y])
         pygame.display.update()
-        sleep(IMAGE_DISPLAY_TIME)
+        # sleep(IMAGE_DISPLAY_TIME) # quitting after taking picture instead
 
 
 # MICROCONTROLLER FUNCTIONS
@@ -110,14 +110,15 @@ def display_image_on_screen():
     player = ImageDisplay()
     print USER_IMAGE_PATH
     player.displayImage(USER_IMAGE_PATH)
-    return
 
 def take_picture(send_to_base_station):
     with picamera.PiCamera() as camera:
         camera.resolution = (int(2592 * IMAGE_QUALITY), int(1944 * IMAGE_QUALITY))
         sleep(2)
         camera.capture(SATELLITE_IMAGE_PATH)
-    
+
+    pygame.display.quit()
+
     if send_to_base_station:
         print 'RUNNING send_picture_to_base_station()'
         send_picture_to_base_station()
