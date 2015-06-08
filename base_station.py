@@ -10,7 +10,7 @@ import time
 # CONFIGURE CONSTANTS
 
 USE_DEV = True
-USE_HARDWARE = True
+USE_HARDWARE = False
 
 IMAGE_TYPE           = '.jpg'
 USER_IMAGE_PATH      = 'user_images/'
@@ -31,9 +31,7 @@ if USE_HARDWARE:
 def get_image_from_web_app():
     api_url = GET_IMAGE_API_DEV if USE_DEV else GET_IMAGE_API_PROD
 
-    request      = urllib2.Request(api_url)
-    response_str = urllib2.urlopen(request).read()
-    response     = json.loads(response_str)
+    response = requests.post(api_url).json()
 
     if response['status'] == 204:
         return None
