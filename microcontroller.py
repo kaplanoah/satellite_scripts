@@ -7,6 +7,9 @@ import sys
 
 # CONFIGURE CONSTANTS
 
+SEND_TO_BASE_STATION = True
+TEST_PICTURE = False
+
 IMAGE_DIRECTORY      = 'Desktop/images/'
 IMAGE_TYPE           = '.jpg'
 USER_IMAGE_PATH      = IMAGE_DIRECTORY + 'user_image'      + IMAGE_TYPE
@@ -147,8 +150,6 @@ def send_picture_to_base_station():
 
 # EXECUTE
 
-send_to_base_station = True
-
 def full_cycle():
 
     print 'RUNNING get_image_from_base_station()'
@@ -158,8 +159,12 @@ def full_cycle():
     display_image_on_screen()
 
     print 'RUNNING take_picture()'
-    take_picture(send_to_base_station)
+    take_picture(SEND_TO_BASE_STATION)
 
-while True:
-    full_cycle()
-    sleep(5)
+if TEST_PICTURE:
+    display_image_on_screen()
+    take_picture(False)
+else:
+    while True:
+        full_cycle()
+        sleep(5)

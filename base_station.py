@@ -9,8 +9,8 @@ import time
 
 # CONFIGURE CONSTANTS
 
-USE_DEV = True
-USE_HARDWARE = False
+USE_DEV = False
+USE_HARDWARE = True
 
 IMAGE_TYPE           = '.jpg'
 USER_IMAGE_PATH      = 'user_images/'
